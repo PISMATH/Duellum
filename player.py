@@ -136,7 +136,7 @@ class Player:
             self.screen.blit(player_heart_image, (player_heart_pos[0] - player_heart_image.get_width() / 2 + i * player_heart_spacing,
                                                   player_heart_pos[1] - player_heart_image.get_height() / 2))
 
-        player_kill_count_img = self.game.font.render(f'Kills {self.kill_count}', False, 'white')
+        player_kill_count_img = self.game.font.render(f'Points: {self.kill_count}', False, 'white')
         self.screen.blit(player_kill_count_img,
                          (screen_width - player_kill_count_img.get_width() - player_kill_count_spacing_x, player_kill_count_spacing_y))
 

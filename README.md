@@ -1,4 +1,4 @@
-# Shoot
+# Duellum
 A 2d shooter game.
 You are the last pilot. 
 You must defend your nation from the enemy.

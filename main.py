@@ -17,7 +17,7 @@ class Game:
         self.screen = pygame.display.set_mode((screen_width, screen_height))
         self.clock = pygame.time.Clock()
         self.players = [Player((screen_width / 2, screen_height / 2), self)]
-        self.font = pygame.font.Font('fonts/ARCADECLASSIC.TTF', 32)
+        self.font = pygame.font.Font('fonts/joystix monospace.otf', 32)
         pygame.display.set_caption('Shoot')
         self.images = {
             'play title screen': pygame.image.load('img/play title screen.png')
@@ -96,8 +96,8 @@ class Game:
             self.enemies.append(
                 Enemy((screen_width + enemy_x_offscreen_dist, random.randint(enemy_y_boarders, screen_height - enemy_y_boarders)), self.screen))
             self.last_enemy_spawn_time = time.time()
-
-    def title_screen_single_player(self):
+     
+    def title_screen_single_player(self, final_score):
         title = True
         while title:
             self.screen.fill('white')
@@ -108,6 +108,15 @@ class Game:
 
                 elif event.type == pygame.MOUSEBUTTONDOWN:  # Check if the user clicked
                     return True
+            
+            if final_score is not None:
+                # Render final score text
+                score_text = self.font.render(f"Final Score: {final_score}", False, "black")  
+                score_width = score_text.get_width()
+                score_x = (screen_width - score_width) / 2
+                score_y = screen_height - 50
+                self.screen.blit(score_text, (score_x, score_y))
+
             # Render play button
             self.screen.blit(
                 self.images['play title screen'],
@@ -119,7 +128,7 @@ class Game:
 
     async def game(self):
         if self.game_mode == 'single player':
-            running = self.title_screen_single_player()
+            running = self.title_screen_single_player(None)
             while running:
                 self.screen.fill('black')
                 for event in pygame.event.get():

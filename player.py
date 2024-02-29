@@ -49,8 +49,9 @@ class Player:
             self.handle_dead_screen()
 
     def handle_dead_screen(self):
+        score = self.kill_count
         self.restart()
-        self.game.title_screen_single_player()
+        self.game.title_screen_single_player(score)
 
     def restart(self):
         self.game.bullets = []
@@ -63,6 +64,7 @@ class Player:
         self.game.enemy_spawn_rate = base_enemy_spawn_speed
         self.lives = player_lives
         self.kill_count = 0
+
     def input(self):
         keys = pygame.key.get_pressed()
 
@@ -80,8 +82,9 @@ class Player:
         else:
             self.direction.x = 0
 
-        if time.time() - self.last_shoot_time > (1 / self.player_shoot_speed):# and keys[pygame.K_SPACE]:
-            self.game.bullets.append(Bullet((self.pos.x, self.pos.y), self.screen))
+        if time.time() - self.last_shoot_time > (1 / self.player_shoot_speed) and (keys[pygame.K_SPACE] or player_machine_gun_mode):
+            NewBullet = Bullet((self.pos.x, self.pos.y), self.screen)
+            self.game.bullets.append(NewBullet)
             self.last_shoot_time = time.time()
 
     # Enemy

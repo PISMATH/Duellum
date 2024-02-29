@@ -46,6 +46,8 @@ class Enemy:
         self.direction.y += (player_pos.y - self.pos.y) * enemy_turn_speed / 100000
 
     def render(self):
+        if self.direction.x > 0:
+            self.img = pygame.transform.flip(self.img, True, False)
         self.img = pygame.transform.rotate(self.img, degrees(-atan(self.direction.y / self.direction.x)))
         self.img.set_colorkey('white')
         self.img_height = self.img.get_height()

@@ -42,10 +42,10 @@ class Game:
         self.last_enemy_spawn_time = time.time()
         self.enemy_spawn_rate = base_enemy_spawn_speed
 
-        self.background_sound = pygame.mixer.Sound('sound/backgroundmusic.wav')
-        self.boom_sound = pygame.mixer.Sound('sound/PlaneExplodes.wav')
-        self.heart_gain_sound = pygame.mixer.Sound('sound/GainHeart.wav')
-        self.background_sound.play(-1)
+        # self.background_sound = pygame.mixer.Sound('sound/backgroundmusic.wav')
+        # self.boom_sound = pygame.mixer.Sound('sound/PlaneExplodes.wav')
+        # self.heart_gain_sound = pygame.mixer.Sound('sound/GainHeart.wav')
+        # self.background_sound.play(-1)
 
         self.image_utils = ImageUtils()
 

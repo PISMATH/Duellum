@@ -100,7 +100,7 @@ class Player:
                         if random.randint(0, upgrade_kill_wait_time) == 0:
                             self.game.upgrades.append(
                                 Upgrade(self.player_heart_image))
-                        self.game.boom_sound.play()
+                        # self.game.boom_sound.play()
                     if bullet in self.game.bullets:
                         self.game.bullets.remove(bullet)
 
@@ -133,7 +133,7 @@ class Player:
         if self.current_upgrade is not None:
             self.current_upgrade = None
             self.lives += 1
-            pygame.mixer.Sound.play(self.game.heart_gain_sound)
+            # pygame.mixer.Sound.play(self.game.heart_gain_sound)
 
     # Big
     def render(self):

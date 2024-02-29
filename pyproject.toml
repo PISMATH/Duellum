@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "duellum"
+version = "0.1.0"
+description = "A 2D shooter game"
+authors = ["PISMATH <sai.bhushan2019@gmail.com>"]
+license = "None"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pygame = "^2.1.0"
+pygbag = "^0.8.6"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

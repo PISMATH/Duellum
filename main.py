@@ -1,6 +1,4 @@
-import pygame
-import time
-import random
+import pygame, time, random, asyncio
 from settings import *
 from player import Player
 from bullet import Bullet
@@ -98,6 +96,7 @@ class Game:
             self.enemies.append(
                 Enemy((screen_width + enemy_x_offscreen_dist, random.randint(enemy_y_boarders, screen_height - enemy_y_boarders)), self.screen))
             self.last_enemy_spawn_time = time.time()
+
     def title_screen_single_player(self):
         title = True
         while title:
@@ -117,7 +116,8 @@ class Game:
             )
             pygame.display.flip()
 
-    def game(self):
+
+    async def game(self):
         if self.game_mode == 'single player':
             running = self.title_screen_single_player()
             while running:
@@ -133,7 +133,7 @@ class Game:
                 pygame.display.flip()
         elif self.game_mode == 'multiplayer':
             pass
-
-if __name__ == '__main__':
-    game = Game()
-    game.game()
+        await asyncio.sleep(0)
+        
+game = Game()
+asyncio.run(game.game())

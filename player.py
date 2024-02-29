@@ -3,7 +3,6 @@ import pygame
 import time
 from settings import *
 from bullet import Bullet
-from images import player_image, player_heart_image
 from upgrades import Upgrade
 
 
@@ -21,8 +20,10 @@ def collide(R1, R2):
 
 
 class Player:
-    def __init__(self, pos, game):
+    def __init__(self, player_image, bullet_image, player_heart_image, pos, game):
         self.img = player_image
+        self.bullet_image = bullet_image
+        self.player_heart_image = player_heart_image
         self.img_height = self.img.get_height()
         self.img_width = self.img.get_width()
 
@@ -82,9 +83,10 @@ class Player:
         else:
             self.direction.x = 0
 
-        if time.time() - self.last_shoot_time > (1 / self.player_shoot_speed) and (keys[pygame.K_SPACE] or player_machine_gun_mode):
-            NewBullet = Bullet((self.pos.x, self.pos.y), self.screen)
-            self.game.bullets.append(NewBullet)
+        # and keys[pygame.K_SPACE]:
+        if time.time() - self.last_shoot_time > (1 / self.player_shoot_speed):
+            self.game.bullets.append(
+                Bullet(self.bullet_image, (self.pos.x, self.pos.y), self.screen))
             self.last_shoot_time = time.time()
 
     # Enemy
@@ -97,14 +99,16 @@ class Player:
                         self.kill_count += 1
                         self.game.enemy_spawn_rate += enemy_spawn_rate_increment
                         if random.randint(0, upgrade_kill_wait_time) == 0:
-                            self.game.upgrades.append(Upgrade())
+                            self.game.upgrades.append(
+                                Upgrade(self.player_heart_image))
                         self.game.boom_sound.play()
                     if bullet in self.game.bullets:
                         self.game.bullets.remove(bullet)
 
     def check_enemy_intersect(self, enemy):
         return collide(
-            (self.pos.x - self.img_width / 2, self.pos.y - self.img_height / 2, self.pos.x + self.img_width / 2, self.pos.y + self.img_height / 2),
+            (self.pos.x - self.img_width / 2, self.pos.y - self.img_height / 2,
+             self.pos.x + self.img_width / 2, self.pos.y + self.img_height / 2),
             (enemy.pos.x - enemy.img_width / 2, enemy.pos.y - enemy.img_height / 2, enemy.pos.x + enemy.img_width / 2,
              enemy.pos.y + enemy.img_height / 2))
 
@@ -117,7 +121,8 @@ class Player:
     # Upgrade section
     def check_upgrade_collide(self, upgrade):
         return collide(
-            (self.pos.x - self.img_width / 2, self.pos.y - self.img_height / 2, self.pos.x + self.img_width / 2, self.pos.y + self.img_height / 2),
+            (self.pos.x - self.img_width / 2, self.pos.y - self.img_height / 2,
+             self.pos.x + self.img_width / 2, self.pos.y + self.img_height / 2),
             (upgrade.pos.x - upgrade.img_width / 2, upgrade.pos.y - upgrade.img_height / 2, upgrade.pos.x + upgrade.img_width / 2,
              upgrade.pos.y + upgrade.img_height / 2))
 
@@ -133,13 +138,15 @@ class Player:
 
     # Big
     def render(self):
-        self.screen.blit(self.img, (self.pos.x - self.img_width / 2, self.pos.y - self.img_height / 2))
+        self.screen.blit(
+            self.img, (self.pos.x - self.img_width / 2, self.pos.y - self.img_height / 2))
 
         for i in range(min(self.lives, screen_width // player_heart_spacing)):
-            self.screen.blit(player_heart_image, (player_heart_pos[0] - player_heart_image.get_width() / 2 + i * player_heart_spacing,
-                                                  player_heart_pos[1] - player_heart_image.get_height() / 2))
+            self.screen.blit(self.player_heart_image, (player_heart_pos[0] - self.player_heart_image.get_width() / 2 + i * player_heart_spacing,
+                                                       player_heart_pos[1] - self.player_heart_image.get_height() / 2))
 
-        player_kill_count_img = self.game.font.render(f'Points: {self.kill_count}', False, 'white')
+        player_kill_count_img = self.game.font.render(
+            f'Points: {self.kill_count}', False, 'white')
         self.screen.blit(player_kill_count_img,
                          (screen_width - player_kill_count_img.get_width() - player_kill_count_spacing_x, player_kill_count_spacing_y))
 

@@ -1,14 +1,15 @@
 import pygame
 from settings import *
-from images import enemy_images, gen6_images
 from math import atan, degrees
 import time
 
+
 class Enemy:
-    def __init__(self, pos, screen):
+    def __init__(self, enemy_images, pos, screen):
         self.pos = pygame.math.Vector2(pos)
         self.speed = enemy_speed
         self.screen = screen
+        self.enemy_images = enemy_images
         self.img = enemy_images[0]
         self.img_height = self.img.get_height()
         self.img_width = self.img.get_width()
@@ -42,8 +43,10 @@ class Enemy:
         self.pos += self.direction * dt * self.speed
 
     def update_direction(self, player_pos):
-        self.direction.x += (player_pos.x - self.pos.x) * enemy_turn_speed / 100000
-        self.direction.y += (player_pos.y - self.pos.y) * enemy_turn_speed / 100000
+        self.direction.x += (player_pos.x - self.pos.x) * \
+            enemy_turn_speed / 100000
+        self.direction.y += (player_pos.y - self.pos.y) * \
+            enemy_turn_speed / 100000
 
     def render(self):
         if self.direction.x > 0:
@@ -53,15 +56,17 @@ class Enemy:
         self.img_height = self.img.get_height()
         self.img_width = self.img.get_width()
 
-        self.screen.blit(self.img, (self.pos.x - self.img_height / 2, self.pos.y - self.img_width / 2))
-        self.img = enemy_images[round(self.total_time) % 8]
+        self.screen.blit(
+            self.img, (self.pos.x - self.img_height / 2, self.pos.y - self.img_width / 2))
+        self.img = self.enemy_images[round(self.total_time) % 8]
 
     def update(self, dt, player_pos):
         if enemy_sight_radius ** 2 > ((self.pos.x - player_pos.x) ** 2 + (self.pos.y - player_pos.y) ** 2):
             self.update_direction(player_pos)
         else:
             self.direction = pygame.math.Vector2(-1, 0)
-        self.shooting = enemy_sight_radius ** 2 > ((self.pos.x - player_pos.x) ** 2 + (self.pos.y - player_pos.y) ** 2)
+        self.shooting = enemy_sight_radius ** 2 > (
+            (self.pos.x - player_pos.x) ** 2 + (self.pos.y - player_pos.y) ** 2)
         self.move(dt)
         self.total_time += dt
         if self.pos.x < - self.img_height:

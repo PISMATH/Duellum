@@ -1,9 +1,9 @@
 from settings import *
 import pygame
-from images import bullet_image
+
 
 class Bullet:
-    def __init__(self, pos, screen):
+    def __init__(self, bullet_image, pos, screen):
         self.pos = pygame.math.Vector2(pos)
         self.speed = bullet_speed
         self.screen = screen
@@ -17,7 +17,8 @@ class Bullet:
         self.pos.y += dt * self.speed * self.direction.y
 
     def render(self):
-        self.screen.blit(self.img, (self.pos.x - self.img_height / 2, self.pos.y - self.img_height / 2))
+        self.screen.blit(
+            self.img, (self.pos.x - self.img_height / 2, self.pos.y - self.img_height / 2))
 
     def update(self, dt):
         self.move(dt)

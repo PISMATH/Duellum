@@ -1,8 +1,13 @@
-import pygame, time, random, asyncio
+import pygame
+import time
+import random
+import asyncio
+from images import ImageUtils
 from settings import *
 from player import Player
 from bullet import Bullet
 from enemies import Enemy
+
 
 def bullet_in_enemy(bullet, enemy):
     if enemy.pos.y - enemy.img_height < bullet.pos.y < enemy.pos.y + enemy.img_height / 2 and \
@@ -10,13 +15,21 @@ def bullet_in_enemy(bullet, enemy):
         return True
     return False
 
+
 class Game:
     def __init__(self, game_mode='single player'):
         pygame.init()
+        image_utils = ImageUtils()
         self.game_mode = game_mode
         self.screen = pygame.display.set_mode((screen_width, screen_height))
         self.clock = pygame.time.Clock()
-        self.players = [Player((screen_width / 2, screen_height / 2), self)]
+        self.players = [Player(
+            image_utils.player_image,
+            image_utils.bullet_image,
+            image_utils.player_heart_image,
+            (screen_width / 2, screen_height / 2),
+            self,
+        )]
         self.font = pygame.font.Font('fonts/ARCADECLASSIC.TTF', 32)
         pygame.display.set_caption('Shoot')
         self.images = {
@@ -33,6 +46,8 @@ class Game:
         self.boom_sound = pygame.mixer.Sound('sound/PlaneExplodes.wav')
         self.heart_gain_sound = pygame.mixer.Sound('sound/GainHeart.wav')
         self.background_sound.play(-1)
+
+        self.image_utils = ImageUtils()
 
     def render_game_single_player(self):
         for bullet in self.bullets:
@@ -74,11 +89,13 @@ class Game:
                 nearest_player = self.players[0]
                 nearest_distance = float('inf')
                 for player in self.players:
-                    dist = (player.pos.x - enemy.pos.x) ** 2 + (player.pos.y - enemy.pos.y) ** 2
+                    dist = (player.pos.x - enemy.pos.x) ** 2 + \
+                        (player.pos.y - enemy.pos.y) ** 2
                     if dist < nearest_distance:
                         nearest_player = player
                         nearest_distance = dist
-                bullet = Bullet(enemy.pos, self.screen)
+                bullet = Bullet(self.image_utils.bullet_image,
+                                enemy.pos, self.screen)
                 bullet.direction = pygame.math.Vector2(nearest_player.pos.x - enemy.pos.x + random.randint(-enemy_aim, enemy_aim),
                                                        nearest_player.pos.y - enemy.pos.y + random.randint(-enemy_aim, enemy_aim)).normalize()
                 bullet.img = pygame.Surface((4, 4))
@@ -94,7 +111,12 @@ class Game:
     def handle_item_creation_single_player(self):
         if time.time() - self.last_enemy_spawn_time > 1 / self.enemy_spawn_rate:
             self.enemies.append(
-                Enemy((screen_width + enemy_x_offscreen_dist, random.randint(enemy_y_boarders, screen_height - enemy_y_boarders)), self.screen))
+                Enemy(
+                    self.image_utils.enemy_images,
+                    (screen_width + enemy_x_offscreen_dist,
+                     random.randint(enemy_y_boarders, screen_height - enemy_y_boarders)),
+                    self.screen)
+            )
             self.last_enemy_spawn_time = time.time()
 
     def title_screen_single_player(self):
@@ -116,7 +138,6 @@ class Game:
             )
             pygame.display.flip()
 
-
     async def game(self):
         if self.game_mode == 'single player':
             running = self.title_screen_single_player()
@@ -134,6 +155,10 @@ class Game:
         elif self.game_mode == 'multiplayer':
             pass
         await asyncio.sleep(0)
-        
-game = Game()
-asyncio.run(game.game())
+
+
+async def main():
+    game = Game()
+    await game.game()
+
+asyncio.run(main())

@@ -1,1 +1,6 @@
 __pycache__
+lib
+include
+lib64
+build
+venv

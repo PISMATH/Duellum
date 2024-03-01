@@ -65,7 +65,7 @@ jobs:
         pip install -r requirements.txt
 
     - name: Build the game for Windows
-      run: pyinstaller Duellum.spec --onefile --windowed
+      run: pyinstaller Duellum.spec
 
     - name: Move the assets to the output folder and Zip the game folder
       run: |

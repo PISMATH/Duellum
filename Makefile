@@ -5,4 +5,8 @@ run-dev-game:
 	python ./main.py
 
 run-dev-web:
+	rm -rf ./build
 	python -m pygbag .
+
+build-prod-binary:
+	python -m pyinstaller ./Duellum.spec

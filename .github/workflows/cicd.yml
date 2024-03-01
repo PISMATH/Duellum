@@ -35,8 +35,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: release-${{ github.ref_name }}-${{ github.run_number }}-${{ github.sha }}
+        release_name: Release on ${{ github.ref_name }} # This sets a friendlier name for the release
         draft: false
         prerelease: false
 

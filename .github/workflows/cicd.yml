@@ -71,7 +71,7 @@ jobs:
       run: |
         Copy-Item -Path img, sound, fonts -Destination dist -Recurse
         Rename-Item dist Duellum-windows
-        Compress-Archive -Path ./Duellum-windows/* -DestinationPath Duellum-windows.zip
+        Compress-Archive -Path ./Duellum-windows -DestinationPath Duellum-windows.zip
 
     - name: Create Release for Windows
       id: create_release_windows

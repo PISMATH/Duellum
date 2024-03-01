@@ -19,7 +19,7 @@ class Game:
         self.screen = pygame.display.set_mode((screen_width, screen_height))
         self.clock = pygame.time.Clock()
         self.players = [Player((screen_width / 2, screen_height / 2), self)]
-        self.font = pygame.font.Font('fonts/ARCADECLASSIC.TTF', 32)
+        self.font = pygame.font.Font('fonts/joystix monospace.otf', 32)
         pygame.display.set_caption('Shoot')
         self.images = {
             'play title screen': pygame.image.load('img/play title screen.png')

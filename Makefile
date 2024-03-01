@@ -9,4 +9,4 @@ run-dev-web:
 	python -m pygbag .
 
 build-prod-binary:
-	python -m pyinstaller ./Duellum.spec
+	pyinstaller ./Duellum.spec

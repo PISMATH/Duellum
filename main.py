@@ -30,7 +30,7 @@ class Game:
             (screen_width / 2, screen_height / 2),
             self,
         )]
-        self.font = pygame.font.Font('fonts/ARCADECLASSIC.TTF', 32)
+        # self.font = pygame.font.Font('fonts/ARCADECLASSIC.TTF', 32)
         pygame.display.set_caption('Shoot')
         self.images = {
             'play title screen': pygame.image.load('img/play title screen.png')
@@ -140,7 +140,8 @@ class Game:
 
     async def game(self):
         if self.game_mode == 'single player':
-            running = self.title_screen_single_player()
+            # running = self.title_screen_single_player()
+            running = True
             while running:
                 self.screen.fill('black')
                 for event in pygame.event.get():
@@ -158,6 +159,8 @@ class Game:
 
 
 async def main():
+    # while True:
+    #     await asyncio.sleep(1)
     game = Game()
     await game.game()
 

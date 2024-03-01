@@ -100,7 +100,7 @@ class Player:
                         if random.randint(0, upgrade_kill_wait_time) == 0:
                             self.game.upgrades.append(
                                 Upgrade(self.player_heart_image))
-                        # self.game.boom_sound.play()
+                        self.game.boom_sound.play()
                     if bullet in self.game.bullets:
                         self.game.bullets.remove(bullet)
 
@@ -144,10 +144,10 @@ class Player:
             self.screen.blit(self.player_heart_image, (player_heart_pos[0] - self.player_heart_image.get_width() / 2 + i * player_heart_spacing,
                                                        player_heart_pos[1] - self.player_heart_image.get_height() / 2))
 
-        player_kill_count_img = self.game.font.render(
-            f'Points: {self.kill_count}', False, 'white')
-        self.screen.blit(player_kill_count_img,
-                         (screen_width - player_kill_count_img.get_width() - player_kill_count_spacing_x, player_kill_count_spacing_y))
+        # player_kill_count_img = self.game.font.render(
+        #     f'Points: {self.kill_count}', False, 'white')
+        # self.screen.blit(player_kill_count_img,
+        #                  (screen_width - player_kill_count_img.get_width() - player_kill_count_spacing_x, player_kill_count_spacing_y))
 
     def move(self, dt):
         x_collide = True

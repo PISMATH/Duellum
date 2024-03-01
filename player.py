@@ -49,8 +49,9 @@ class Player:
             self.handle_dead_screen()
 
     def handle_dead_screen(self):
+        score = self.kill_count
         self.restart()
-        self.game.title_screen_single_player()
+        self.game.title_screen_single_player(score)
 
     def restart(self):
         self.game.bullets = []

@@ -30,7 +30,7 @@ class Game:
             (screen_width / 2, screen_height / 2),
             self,
         )]
-        self.font = pygame.font.Font('fonts/ARCADECLASSIC.TTF', 32)
+        self.font = pygame.font.Font('fonts/joystix-monospace.otf', 32)
         pygame.display.set_caption('Shoot')
         self.images = {
             'play title screen': pygame.image.load('img/play title screen.png')
@@ -118,7 +118,7 @@ class Game:
                     self.screen)
             )
             self.last_enemy_spawn_time = time.time()
-     
+
     def title_screen_single_player(self, final_score):
         title = True
         while title:
@@ -130,10 +130,11 @@ class Game:
 
                 elif event.type == pygame.MOUSEBUTTONDOWN:  # Check if the user clicked
                     return True
-            
+
             if final_score is not None:
                 # Render final score text
-                score_text = self.font.render(f"Final Score: {final_score}", False, "black")  
+                score_text = self.font.render(
+                    f"Final Score: {final_score}", False, "black")
                 score_width = score_text.get_width()
                 score_x = (screen_width - score_width) / 2
                 score_y = screen_height - 50

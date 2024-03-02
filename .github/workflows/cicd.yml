@@ -92,7 +92,7 @@ jobs:
         run: |
           mkdir -p docs
           cp Duellum-macos.zip docs/Duellum-macos.zip
-
+          
   create-release:
     needs: [build-linux, build-windows, build-macos]
     runs-on: ubuntu-latest
@@ -118,7 +118,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/Duellum-linux.zip
+          asset_path: ./artifacts/Duellum-linux.zip/Duellum-linux.zip
           asset_name: Duellum-linux.zip
           asset_content_type: application/zip
       - name: Upload Windows Release Asset
@@ -127,7 +127,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/Duellum-windows.zip
+          asset_path: ./artifacts/Duellum-windows.zip/Duellum-windows.zip
           asset_name: Duellum-windows.zip
           asset_content_type: application/zip
       - name: Upload macOS Release Asset
@@ -136,6 +136,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/Duellum-macos.zip
+          asset_path: ./artifacts/Duellum-macos.zip/Duellum-macos.zip
           asset_name: Duellum-macos.zip
           asset_content_type: application/zip

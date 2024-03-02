@@ -1,4 +1,4 @@
-name: Build and Release Game on Both Platforms
+name: Build and Release Game on All Platforms
 
 on:
   push:
@@ -14,26 +14,26 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.10'
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
       - name: Build the game for Linux
         run: pyinstaller Duellum.spec
-
       - name: Move the assets to the output folder and Zip the game folder
         run: |
           cp -r img sound fonts dist
           mv dist Duellum-linux
           zip -r Duellum-linux.zip ./Duellum-linux
-
       - name: Upload Linux Build Artifact
         uses: actions/upload-artifact@v2
         with:
           name: Duellum-linux.zip
           path: Duellum-linux.zip
+      - name: Copy binary to docs folder
+        run: |
+          mkdir -p docs
+          cp Duellum-linux.zip docs/Duellum-linux.zip
 
   build-windows:
     runs-on: windows-latest
@@ -43,26 +43,26 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.10'
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
       - name: Build the game for Windows
         run: pyinstaller Duellum.spec
-
       - name: Move the assets to the output folder and Zip the game folder
         run: |
           Copy-Item -Path img, sound, fonts -Destination dist -Recurse
           Rename-Item dist Duellum-windows
           Compress-Archive -Path ./Duellum-windows -DestinationPath Duellum-windows.zip
-
       - name: Upload Windows Build Artifact
         uses: actions/upload-artifact@v2
         with:
           name: Duellum-windows.zip
           path: Duellum-windows.zip
+      - name: Copy binary to docs folder
+        run: |
+          New-Item -Path docs -ItemType directory -Force
+          Copy-Item Duellum-windows.zip docs/Duellum-windows.zip
 
   build-macos:
     runs-on: macos-latest
@@ -72,47 +72,36 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.10'
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
       - name: Build the game for macOS
         run: pyinstaller Duellum.spec
-
       - name: Move the assets to the output folder and Zip the game folder
         run: |
           cp -r img sound fonts dist
           mv dist Duellum-macos
           zip -r Duellum-macos.zip ./Duellum-macos
-
       - name: Upload macOS Build Artifact
         uses: actions/upload-artifact@v2
         with:
           name: Duellum-macos.zip
           path: Duellum-macos.zip
+      - name: Copy binary to docs folder
+        run: |
+          mkdir -p docs
+          cp Duellum-macos.zip docs/Duellum-macos.zip
 
   create-release:
     needs: [build-linux, build-windows, build-macos]
     runs-on: ubuntu-latest
     steps:
-      - name: Download Linux Build Artifact
+      - uses: actions/checkout@v2
+      - name: Download all Build Artifacts
         uses: actions/download-artifact@v2
         with:
-          name: Duellum-linux.zip
           path: ./artifacts
-      - name: Download Windows Build Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: Duellum-windows.zip
-          path: ./artifacts
-      - name: Download macOS Build Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: Duellum-macos.zip
-          path: ./artifacts
-
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -123,7 +112,6 @@ jobs:
           release_name: Game Release ${{ github.ref_name }}
           draft: false
           prerelease: false
-
       - name: Upload Linux Release Asset
         uses: actions/upload-release-asset@v1
         env:
@@ -133,7 +121,6 @@ jobs:
           asset_path: ./artifacts/Duellum-linux.zip
           asset_name: Duellum-linux.zip
           asset_content_type: application/zip
-
       - name: Upload Windows Release Asset
         uses: actions/upload-release-asset@v1
         env:
@@ -143,7 +130,6 @@ jobs:
           asset_path: ./artifacts/Duellum-windows.zip
           asset_name: Duellum-windows.zip
           asset_content_type: application/zip
-
       - name: Upload macOS Release Asset
         uses: actions/upload-release-asset@v1
         env:

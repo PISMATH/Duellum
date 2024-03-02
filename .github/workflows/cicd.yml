@@ -9,87 +9,98 @@ jobs:
   build-linux:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.10'
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-    - name: Build the game for Linux
-      run: pyinstaller Duellum.spec
+      - name: Build the game for Linux
+        run: pyinstaller Duellum.spec
 
-    - name: Move the assets to the output folder and Zip the game folder
-      run: |
-        cp -r img sound fonts dist
-        mv dist Duellum-linux
-        zip -r Duellum-linux.zip ./Duellum-linux
+      - name: Move the assets to the output folder and Zip the game folder
+        run: |
+          cp -r img sound fonts dist
+          mv dist Duellum-linux
+          zip -r Duellum-linux.zip ./Duellum-linux
 
-    - name: Create Release for Linux
-      id: create_release_linux
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: linux-release-${{ github.ref_name }}-${{ github.run_number }}-${{ github.sha }}
-        release_name: Linux Release on ${{ github.ref_name }}
-        draft: false
-        prerelease: false
-
-    - name: Upload Linux Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release_linux.outputs.upload_url }}
-        asset_path: ./Duellum-linux.zip
-        asset_name: Duellum-linux.zip
-        asset_content_type: application/zip
+      - name: Upload Linux Build Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Duellum-linux.zip
+          path: Duellum-linux.zip
 
   build-windows:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.10'
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-    - name: Build the game for Windows
-      run: pyinstaller Duellum.spec
+      - name: Build the game for Windows
+        run: pyinstaller Duellum.spec
 
-    - name: Move the assets to the output folder and Zip the game folder
-      run: |
-        Copy-Item -Path img, sound, fonts -Destination dist -Recurse
-        Rename-Item dist Duellum-windows
-        Compress-Archive -Path ./Duellum-windows -DestinationPath Duellum-windows.zip
+      - name: Move the assets to the output folder and Zip the game folder
+        run: |
+          Copy-Item -Path img, sound, fonts -Destination dist -Recurse
+          Rename-Item dist Duellum-windows
+          Compress-Archive -Path ./Duellum-windows -DestinationPath Duellum-windows.zip
 
-    - name: Create Release for Windows
-      id: create_release_windows
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: windows-release-${{ github.ref_name }}-${{ github.run_number }}-${{ github.sha }}
-        release_name: Windows Release on ${{ github.ref_name }}
-        draft: false
-        prerelease: false
+      - name: Upload Windows Build Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Duellum-windows.zip
+          path: Duellum-windows.zip
 
-    - name: Upload Windows Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release_windows.outputs.upload_url }}
-        asset_path: ./Duellum-windows.zip
-        asset_name: Duellum-windows.zip
-        asset_content_type: application/zip
+  create-release:
+    needs: [build-linux, build-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: .
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: game-release-${{ github.ref_name }}-${{ github.run_number }}-${{ github.sha }}
+          release_name: Game Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Linux Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./Duellum-linux.zip
+          asset_name: Duellum-linux.zip
+          asset_content_type: application/zip
+
+      - name: Upload Windows Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./Duellum-windows.zip
+          asset_name: Duellum-windows.zip
+          asset_content_type: application/zip

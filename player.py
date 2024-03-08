@@ -68,7 +68,7 @@ class Player:
         self.kill_count = 0
         for stat in self.game.statistics:
             self.game.statistics[stat] = 0
-            
+
     def input(self):
         keys = pygame.key.get_pressed()
 
@@ -130,16 +130,17 @@ class Player:
              upgrade.pos.y + upgrade.img_height / 2))
 
     def handle_upgrades(self):
-        for upgrade in self.game.upgrades:
-            if self.check_upgrade_collide(upgrade):
-                self.current_upgrade = upgrade
-                self.game.upgrades.remove(upgrade)
-                self.game.statistics["Hearts Collected"] += 1
+        if self.lives < player_heart_cap or player_heart_cap is None:
+            for upgrade in self.game.upgrades:
+                if self.check_upgrade_collide(upgrade):
+                    self.current_upgrade = upgrade
+                    self.game.upgrades.remove(upgrade)
+                    self.game.statistics["Hearts Collected"] += 1
 
-        if self.current_upgrade is not None:
-            self.current_upgrade = None
-            self.lives += 1
-            pygame.mixer.Sound.play(self.game.heart_gain_sound)
+            if self.current_upgrade is not None:
+                self.current_upgrade = None
+                self.lives += 1
+                pygame.mixer.Sound.play(self.game.heart_gain_sound)
 
     # Big
     def render(self):

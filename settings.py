@@ -10,9 +10,11 @@ player_shoot_speed = 3
 player_lives = 3
 player_heart_pos = (32, 32)
 player_heart_spacing = 40
+player_heart_cap = 5
 player_kill_count_spacing_x = 20
 player_kill_count_spacing_y = 12
 player_machine_gun_mode = True
+
 # Bullet parameters
 bullet_speed = .5
 

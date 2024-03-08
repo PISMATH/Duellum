@@ -147,6 +147,27 @@ class Game:
                  screen_height / 2 - self.images['play title screen'].get_height() / 2)
             )
             pygame.display.flip()
+    
+    def single_player_pause_menu(self, current_score):
+        paused = True
+        while paused:
+            self.screen.fill('white')
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:  # Check if the user is closing the window
+                    pygame.quit()
+                    quit()
+
+                elif event.type == pygame.MOUSEBUTTONDOWN:  # Check if the user clicked
+                    paused = False
+
+            if current_score is not None:
+                # Render final score text
+                score_text = self.font.render(
+                    f"Current Score: {current_score}", False, "black")
+                score_width = score_text.get_width()
+                score_x = (screen_width - score_width) / 2
+                score_y = screen_height - 50
+                self.screen.blit(score_text, (score_x, score_y))
 
     async def game(self):
         if self.game_mode == 'single player':
@@ -157,6 +178,14 @@ class Game:
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         quit()
+                    
+                    if event.type == pygame.KEYDOWN:
+                        print("Keydown")
+                        keys = pygame.key.get_pressed()
+                        if keys[pygame.K_SPACE]:
+                            print("Pausing")
+                            self.single_player_pause_menu(self.players[0].kill_count)
+
                 dt = self.clock.tick()
                 if self.players[0].lives > 0:
                     self.render_game_single_player()
@@ -166,7 +195,7 @@ class Game:
             pass
         await asyncio.sleep(0)
 
-
+    
 async def main():
     game = Game()
     await game.game()

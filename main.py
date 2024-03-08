@@ -172,7 +172,9 @@ class Game:
     async def game(self):
         if self.game_mode == 'single player':
             running = self.title_screen_single_player(None)
+            paused_this_round = False
             while running:
+                paused_this_round = False
                 self.screen.fill('black')
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -185,8 +187,11 @@ class Game:
                         if keys[pygame.K_SPACE]:
                             print("Pausing")
                             self.single_player_pause_menu(self.players[0].kill_count)
-
+                            paused_this_round = True
+                
                 dt = self.clock.tick()
+                if paused_this_round:
+                    dt = 0
                 if self.players[0].lives > 0:
                     self.render_game_single_player()
                     self.update_single_player(dt)

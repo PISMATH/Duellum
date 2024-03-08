@@ -188,7 +188,7 @@ class Game:
                     
                     if event.type == pygame.KEYDOWN:
                         keys = pygame.key.get_pressed()
-                        if keys[pygame.K_SPACE]:
+                        if keys[pause_key]:
                             self.single_player_pause_menu(self.players[0].kill_count, old_screen)
                             paused_this_round = True
                 

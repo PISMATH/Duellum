@@ -1,3 +1,5 @@
+import pygame.constants
+
 #  Screen parameters
 screen_width = 1260
 screen_height = 720
@@ -32,3 +34,11 @@ upgrade_offscreen_dist = 100
 upgrade_y_borders = 32
 upgrade_move_speed = 0.1
 upgrade_kill_wait_time = 10
+
+# Keybinds
+pause_key = pygame.constants.K_SPACE
+shoot_key = pygame.constants.K_s
+up_key = pygame.constants.K_UP
+down_key = pygame.constants.K_DOWN
+left_key = pygame.constants.K_LEFT
+right_key = pygame.constants.K_RIGHT

@@ -46,6 +46,7 @@ class Player:
 
     def handle_life_loss(self):
         self.lives -= 1
+        self.game.statistics["Damage Taken"] += 1 
         if self.lives < 1:
             self.handle_dead_screen()
 
@@ -65,7 +66,9 @@ class Player:
         self.game.enemy_spawn_rate = base_enemy_spawn_speed
         self.lives = player_lives
         self.kill_count = 0
-
+        for stat in self.game.statistics:
+            self.game.statistics[stat] = 0
+            
     def input(self):
         keys = pygame.key.get_pressed()
 
@@ -131,6 +134,8 @@ class Player:
             if self.check_upgrade_collide(upgrade):
                 self.current_upgrade = upgrade
                 self.game.upgrades.remove(upgrade)
+                self.game.statistics["Hearts Collected"] += 1
+
         if self.current_upgrade is not None:
             self.current_upgrade = None
             self.lives += 1

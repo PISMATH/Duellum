@@ -48,7 +48,11 @@ class Game:
         self.background_sound.play(-1)
 
         self.image_utils = ImageUtils()
-
+        self.statistics = {
+            "Hearts Collected": 0,
+            "Damage Taken": 0
+        }
+        
     def render_game_single_player(self):
         for bullet in self.bullets:
             bullet.render()
@@ -169,9 +173,21 @@ class Game:
                 score_text = self.font.render(
                     f"Current Score: {current_score}", False, "white")
                 score_width = score_text.get_width()
-                score_x = (screen_width - score_width) / 2
-                score_y = screen_height - 50
-                self.screen.blit(score_text, (score_x, score_y))
+                text_x = (screen_width - score_width) / 2
+                text_y = 50
+            
+                self.screen.blit(score_text, (text_x, text_y))
+
+            statistics_text = self.font.render(
+                    f"Statistics", False, "white")
+            text_y += 50
+            self.screen.blit(statistics_text, (text_x, text_y))
+            for stat in self.statistics:
+                stat_text = self.font.render(
+                    f"{stat}: {self.statistics[stat]}", False, "white")
+                text_y += 50
+                self.screen.blit(stat_text, (text_x, text_y))
+                
             pygame.display.flip()
             
     async def game(self):

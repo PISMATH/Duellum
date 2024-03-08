@@ -148,7 +148,7 @@ class Game:
             )
             pygame.display.flip()
     
-    def single_player_pause_menu(self, current_score):
+    def single_player_pause_menu(self, current_score, old_screen):
         paused = True
         while paused:
             self.screen.fill('white')
@@ -157,24 +157,29 @@ class Game:
                     pygame.quit()
                     quit()
 
-                elif event.type == pygame.MOUSEBUTTONDOWN:  # Check if the user clicked
-                    paused = False
+                if event.type == pygame.KEYDOWN:
+                        keys = pygame.key.get_pressed()
+                        if keys[pygame.K_SPACE]:
+                            paused = False
+
+            self.screen.blit(old_screen, (0, 0))
 
             if current_score is not None:
                 # Render final score text
                 score_text = self.font.render(
-                    f"Current Score: {current_score}", False, "black")
+                    f"Current Score: {current_score}", False, "white")
                 score_width = score_text.get_width()
                 score_x = (screen_width - score_width) / 2
                 score_y = screen_height - 50
                 self.screen.blit(score_text, (score_x, score_y))
-
+            pygame.display.flip()
+            
     async def game(self):
         if self.game_mode == 'single player':
             running = self.title_screen_single_player(None)
-            paused_this_round = False
+            paused_this_round = True
             while running:
-                paused_this_round = False
+                old_screen = self.screen.copy()
                 self.screen.fill('black')
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -182,11 +187,9 @@ class Game:
                         quit()
                     
                     if event.type == pygame.KEYDOWN:
-                        print("Keydown")
                         keys = pygame.key.get_pressed()
                         if keys[pygame.K_SPACE]:
-                            print("Pausing")
-                            self.single_player_pause_menu(self.players[0].kill_count)
+                            self.single_player_pause_menu(self.players[0].kill_count, old_screen)
                             paused_this_round = True
                 
                 dt = self.clock.tick()
@@ -195,7 +198,10 @@ class Game:
                 if self.players[0].lives > 0:
                     self.render_game_single_player()
                     self.update_single_player(dt)
+                
+                paused_this_round = False
                 pygame.display.flip()
+
         elif self.game_mode == 'multiplayer':
             pass
         await asyncio.sleep(0)

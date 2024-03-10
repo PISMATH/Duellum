@@ -86,8 +86,8 @@ class Player:
         else:
             self.direction.x = 0
 
-        # and keys[pygame.K_SPACE]:
-        if time.time() - self.last_shoot_time > (1 / self.player_shoot_speed):
+        
+        if time.time() - self.last_shoot_time > (1 / self.player_shoot_speed) and (keys[shoot_key] or player_machine_gun_mode):
             self.game.bullets.append(
                 Bullet(self.bullet_image, (self.pos.x, self.pos.y), self.screen))
             self.last_shoot_time = time.time()

@@ -66,6 +66,8 @@ class Player:
         self.game.enemy_spawn_rate = base_enemy_spawn_speed
         self.lives = player_lives
         self.kill_count = 0
+        self.pos = pygame.math.Vector2(screen_width / 2, screen_height / 2)
+        self.last_shoot_time = time.time()
         for stat in self.game.statistics:
             self.game.statistics[stat] = 0
 

@@ -130,7 +130,7 @@ class Player:
              upgrade.pos.y + upgrade.img_height / 2))
 
     def handle_upgrades(self):
-        if self.lives < player_heart_cap or player_heart_cap is None:
+        if player_heart_cap is None or self.lives < player_heart_cap:
             for upgrade in self.game.upgrades:
                 if self.check_upgrade_collide(upgrade):
                     self.current_upgrade = upgrade

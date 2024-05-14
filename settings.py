@@ -13,9 +13,9 @@ player_heart_spacing = 40
 player_heart_cap = 5
 player_kill_count_spacing_x = 20
 player_kill_count_spacing_y = 12
-player_machine_gun_mode = True
+player_machine_gun_mode = False
 
-player_controller = 'user' # user, random
+player_controller = 'user' # user, random, ai_v1
 
 # Bullet parameters
 bullet_speed = .5

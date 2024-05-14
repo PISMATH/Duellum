@@ -41,7 +41,7 @@ class Game:
         self.enemy_bullets = []
         self.last_enemy_spawn_time = time.time()
         self.enemy_spawn_rate = base_enemy_spawn_speed
-
+        self.player_died_last_round = False
         self.background_sound = pygame.mixer.Sound('sound/backgroundmusic.wav')
         self.boom_sound = pygame.mixer.Sound('sound/PlaneExplodes.wav')
         self.heart_gain_sound = pygame.mixer.Sound('sound/GainHeart.wav')
@@ -150,6 +150,7 @@ class Game:
                 (screen_width / 2 - self.images['play title screen'].get_width() / 2,
                  screen_height / 2 - self.images['play title screen'].get_height() / 2)
             )
+            self.player_died_last_round = True
             pygame.display.flip()
     
     def single_player_pause_menu(self, current_score, old_screen):
@@ -180,6 +181,7 @@ class Game:
 
             statistics_text = self.font.render(
                     f"Statistics", False, "white")
+
             text_y += 50
             self.screen.blit(statistics_text, (text_x, text_y))
             for stat in self.statistics:
@@ -209,8 +211,13 @@ class Game:
                             paused_this_round = True
                 
                 dt = self.clock.tick()
-                if paused_this_round:
+                
+                if paused_this_round or self.player_died_last_round:
                     dt = 0
+                
+                if self.player_died_last_round:
+                    self.player_died_last_round = False
+                
                 if self.players[0].lives > 0:
                     self.render_game_single_player()
                     self.update_single_player(dt)

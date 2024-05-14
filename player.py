@@ -4,7 +4,7 @@ import time
 from settings import *
 from bullet import Bullet
 from upgrades import Upgrade
-
+from player_controls import controllers
 
 def bullet_in_enemy(bullet, enemy):
     if enemy.pos.y - enemy.img_height < bullet.pos.y < enemy.pos.y + enemy.img_height / 2 and \
@@ -72,24 +72,30 @@ class Player:
             self.game.statistics[stat] = 0
 
     def input(self):
-        keys = pygame.key.get_pressed()
+        controller = controllers[player_controller]
+        
+        if controller is not None:
+            going_up, going_down, going_left, going_right, shooting = controller(self)
 
-        if keys[up_key]:
+        else:
+            raise NotImplementedError
+
+        if going_up:
             self.direction.y = -1
-        elif keys[down_key]:
+        elif going_down:
             self.direction.y = 1
         else:
             self.direction.y = 0
 
-        if keys[left_key]:
+        if going_left:
             self.direction.x = -1
-        elif keys[right_key]:
+        elif going_right:
             self.direction.x = 1
         else:
             self.direction.x = 0
 
         
-        if time.time() - self.last_shoot_time > (1 / self.player_shoot_speed) and (keys[shoot_key] or player_machine_gun_mode):
+        if time.time() - self.last_shoot_time > (1 / self.player_shoot_speed) and (shooting or player_machine_gun_mode):
             self.game.bullets.append(
                 Bullet(self.bullet_image, (self.pos.x, self.pos.y), self.screen))
             self.last_shoot_time = time.time()

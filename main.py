@@ -1,7 +1,6 @@
 import pygame
 import time
 import random
-import asyncio
 from images import ImageUtils
 from settings import *
 from player import Player
@@ -192,7 +191,7 @@ class Game:
                 
             pygame.display.flip()
             
-    async def game(self):
+    def game(self):
         if self.game_mode == 'single player':
             running = self.title_screen_single_player(None)
             paused_this_round = True
@@ -227,11 +226,11 @@ class Game:
 
         elif self.game_mode == 'multiplayer':
             pass
-        await asyncio.sleep(0)
+        
 
     
-async def main():
+def main():
     game = Game()
-    await game.game()
+    game.game()
 
-asyncio.run(main())
+main()

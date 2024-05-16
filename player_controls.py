@@ -1,6 +1,7 @@
 from settings import *
 import random
 import pygame
+import time
 
 def user_controls(player):
     keys = pygame.key.get_pressed()
@@ -38,7 +39,7 @@ def ai_v2(player, enemies_shot_at=[]):
     player_x, player_y = player.pos
 
     for enemy in player.game.enemies:
-        enemy_x, _ = enemy.pos
+        enemy_x, enemy_y = enemy.pos
         
         if enemy in enemies_shot_at and enemy_x > enemy_sight_radius + (enemy_speed * enemy_sight_radius / bullet_speed):
             continue
@@ -46,19 +47,24 @@ def ai_v2(player, enemies_shot_at=[]):
         if enemy_x < farthest_enemy_dist:
             farthest_enemy_dist = enemy_x
             farthest_enemy = enemy
-
+        
+        if abs(enemy_y - player_y) < enemy.img_height / 2:
+            shooting = True
+            
     up = None
     shooting = False
     if farthest_enemy is not None:
         enemy_x, enemy_y = farthest_enemy.pos
         if abs(enemy_y - player_y) < farthest_enemy.img_height / 2:
             shooting = True
-            enemies_shot_at.append(farthest_enemy)
+            if time.time() - player.last_shoot_time > (1 / player.player_shoot_speed):
+                enemies_shot_at.append(farthest_enemy)
 
         if enemy_y < player_y:
             up = True
         else:
             up = False
+
 
     going_up = up if up is not None else False
     going_down = not up if up is not None else False

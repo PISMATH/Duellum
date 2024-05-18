@@ -27,7 +27,7 @@ class Game:
             image_utils.bullet_image,
             image_utils.player_heart_image,
             (screen_width / 2, screen_height / 2),
-            self,
+            self, player_controller,
         )]
         self.font = pygame.font.Font('fonts/joystix-monospace.otf', 32)
         pygame.display.set_caption('Shoot')
@@ -208,7 +208,12 @@ class Game:
                         if keys[pause_key]:
                             self.single_player_pause_menu(self.players[0].kill_count, old_screen)
                             paused_this_round = True
-                
+
+                        if keys[switch_key]:
+                            for player in self.players:
+                                player.controller = 'user'
+                            
+
                 dt = self.clock.tick()
                 
                 if paused_this_round or self.player_died_last_round:

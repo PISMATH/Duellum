@@ -20,13 +20,13 @@ def collide(R1, R2):
 
 
 class Player:
-    def __init__(self, player_image, bullet_image, player_heart_image, pos, game):
+    def __init__(self, player_image, bullet_image, player_heart_image, pos, game, controller):
         self.img = player_image
         self.bullet_image = bullet_image
         self.player_heart_image = player_heart_image
         self.img_height = self.img.get_height()
         self.img_width = self.img.get_width()
-
+        
         self.game = game
         self.screen = game.screen
 
@@ -43,6 +43,7 @@ class Player:
         self.last_enemy_spawn_time = time.time()
         self.kill_count = 0
         self.current_upgrade = None
+        self.controller = controller
 
     def handle_life_loss(self):
         self.lives -= 1
@@ -72,7 +73,7 @@ class Player:
             self.game.statistics[stat] = 0
 
     def input(self):
-        controller = controllers[player_controller]
+        controller = controllers[self.controller]
         
         if controller is not None:
             going_up, going_down, going_left, going_right, shooting = controller(self)

@@ -13,15 +13,15 @@ player_heart_spacing = 40
 player_heart_cap = 5
 player_kill_count_spacing_x = 20
 player_kill_count_spacing_y = 12
-player_machine_gun_mode = False
+player_machine_gun_mode = True
 
 player_controller = 'user' # user, random, ai_v1
 
 # Bullet parameters
-bullet_speed = .5
+bullet_speed = 0.5
 
 # Enemy parameters
-base_enemy_spawn_speed = .5
+base_enemy_spawn_speed = 0.5
 enemy_spawn_rate_increment = 0.01
 enemy_speed = 0.15
 enemy_x_offscreen_dist = 100
@@ -40,6 +40,7 @@ upgrade_move_speed = 0.1
 upgrade_kill_wait_time = 10
 
 # Keybinds
+switch_key = pygame.constants.K_u
 pause_key = pygame.constants.K_SPACE
 shoot_key = pygame.constants.K_s
 up_key = pygame.constants.K_UP

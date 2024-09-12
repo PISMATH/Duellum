@@ -4,6 +4,7 @@ import random
 from images import ImageUtils
 from settings import *
 from player import Player
+from player_controls import controllers
 from bullet import Bullet
 from enemies import Enemy
 
@@ -211,7 +212,7 @@ class Game:
 
                         if keys[switch_key]:
                             for player in self.players:
-                                player.controller = 'user'
+                                player.controller = controllers[player.controller][1]
                             
 
                 dt = self.clock.tick()

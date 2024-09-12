@@ -73,7 +73,7 @@ class Player:
             self.game.statistics[stat] = 0
 
     def input(self):
-        controller = controllers[self.controller]
+        controller = controllers[self.controller][0]
         
         if controller is not None:
             going_up, going_down, going_left, going_right, shooting = controller(self)

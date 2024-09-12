@@ -72,8 +72,8 @@ def ai_v2(player, enemies_shot_at=[]):
     return going_up, going_down, True, False, shooting
 
 controllers = {
-    'user': user_controls,
-    'random': random_controls,
-    'ai_v1': ai_v1,
-    'ai_v2': ai_v2
+    'user': [user_controls, 'random'],
+    'random': [random_controls, 'ai_v1'],
+    'ai_v1': [ai_v1, 'ai_v2'],
+    'ai_v2': [ai_v2, 'user']
 }
